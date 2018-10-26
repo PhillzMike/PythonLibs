@@ -75,13 +75,13 @@ def ukkonen(text):
                             active_node = suffix_link[active_node]
                         else:
                             active_node = st.root
-                        # rule 3 addendum
-                        if active_node.has_child_with_key(active_letter):
-                            next_hop = active_node.get_child_with_key(active_letter)
-                            if next_hop.length < active_length:
-                                active_length -= next_hop.length
-                                active_letter = st.letter_at(old_active_node.start + next_hop.length)
-                                active_node = next_hop
+                        # TODO rule 3 addendum
+                        # if active_node.has_child_with_key(active_letter):
+                        #     next_hop = active_node.get_child_with_key(active_letter)
+                        #     if next_hop.length < active_length:
+                        #         active_length -= next_hop.length
+                        #         active_letter = st.letter_at(old_active_node.start + next_hop.length)
+                        #         active_node = next_hop
                     # #Rule 2
                     if has_created:
                         suffix_link[last_created] = current_branch
@@ -98,5 +98,5 @@ a = 'dsiopgrasijbipisfcgjgoeojtoptldcjdiqjsqtssntnbjleqakkeelptgocbilejtfthqjfji
 b = 'aaaaaaa'
 
 c = 'bananaland'
-ans = ukkonen(a)
+ans = ukkonen(c)
 print(ans)
