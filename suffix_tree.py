@@ -23,6 +23,8 @@ class SuffixTree:
         return self.__text[index]
 
     def is_same_letter(self, index1, index2):
+        if index1 >= len(self.__text) or index2 >= len(self.__text):
+             return False
         return self.__text[index1] == self.__text[index2]
 
     # returns the substring from start to end, [start and end inclusive], can handle end == None
