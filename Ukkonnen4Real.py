@@ -28,8 +28,6 @@ def ukkonen(text):
     suffix_link = {}
 
     for i in range(st.text_length):
-        if i == 8:
-            hefkij=0
         remainder += 1
         has_created = False
         if active_node.is_root:
@@ -41,8 +39,6 @@ def ukkonen(text):
                 current_branch = active_node.get_child_with_key(active_letter)
 
                 # if the current branch has the next letter
-                if current_branch.start + active_length >= st.text_length:
-                    ajknd = 1
                 if st.is_same_letter(current_branch.start + active_length, i):
                     active_length += 1
 
@@ -56,17 +52,8 @@ def ukkonen(text):
 
                     if current_branch.end is not None and current_branch.start + active_length > current_branch.end:
                         next_hop = current_branch
-                        # while next_hop.length <= active_length:
-
                         print('problem')
                         # # TODO rule 3 addendum
-
-                        # if active_node.has_child_with_key(active_letter):
-                        #     next_hop = active_node.get_child_with_key(active_letter)
-                        #     if next_hop.length < active_length:
-                        #         active_length -= next_hop.length
-                        #         active_letter = st.letter_at((i - remainder) + 2 + (next_hop.end - next_hop.start + 1))
-                        #         active_node = next_hop
                     else:
                         split_n_insert(current_branch, active_length, i)
                     # Splitting stuff
@@ -111,7 +98,8 @@ def ukkonen(text):
                                 active_node = suffix_link[active_node]
                         else:
                             active_node = st.root
-                        # # TODO rule 3 addendum
+
+                        # TODO rule 3 addendum
                         # if active_node.has_child_with_key(active_letter):
                         #     next_hop = active_node.get_child_with_key(active_letter)
                         #     if next_hop.length < active_length:
@@ -126,6 +114,23 @@ def ukkonen(text):
             else:
                 active_node.add_child(SuffixNode(i))
                 remainder -= 1
+                if active_node in suffix_link:
+                    if suffix_link[active_node].has_child_with_key(active_letter):
+                        gathered_length = 0
+                        next_hop = suffix_link[active_node]
+                        temp_active_letter = active_letter
+                        while next_hop.length < active_length:
+                            next_hop = next_hop.get_child_with_key(temp_active_letter)
+                            gathered_length += next_hop.length
+                            # if next_hop.length < active_length:
+                            active_length -= next_hop.length
+                            temp_active_letter = st.letter_at((i - remainder) + 2 + gathered_length)
+                        active_node = next_hop
+                        active_letter = temp_active_letter
+                    else:
+                        active_node = suffix_link[active_node]
+                else:
+                    active_node = st.root
 
     st.count_leaves()
     return st
@@ -136,5 +141,5 @@ b = 'aaaaaaa'
 d = 'abcdefabxybcdmnabcdex'
 c = 'bananaland'
 e = 'cdecdbcdc'
-ans = ukkonen(e)
+ans = ukkonen(b)
 print(ans)

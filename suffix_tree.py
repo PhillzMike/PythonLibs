@@ -23,8 +23,6 @@ class SuffixTree:
         return self.__text[index]
 
     def is_same_letter(self, index1, index2):
-        if index1 >= len(self.__text) or index2 >= len(self.__text):
-             return False
         return self.__text[index1] == self.__text[index2]
 
     # returns the substring from start to end, [start and end inclusive], can handle end == None
@@ -55,8 +53,21 @@ class SuffixNode(Node):
         self.__tree = None
         self.__start = start
         self.__child_leaves = 1
-        self.__real_start = None
+        self.__suffix_link = None
+        self.__before_start = None
         self.__children_keys = dict()
+
+    @property
+    def has_suffix_link(self):
+        return self.__suffix_link is not None
+
+    @property
+    def suffix_link(self):
+        return self.__suffix_link
+
+    @suffix_link.setter
+    def suffix_link(self, suffix_link):
+        self.__suffix_link = suffix_link
 
     @property
     def start(self):
@@ -130,8 +141,11 @@ class SuffixNode(Node):
         return self.__key
 
     @property
-    def real_start(self):
-        return self.__real_start
+    def real_length(self):
+        length = (self.length + self.__before_start)
+        if self.__end is None:
+            length -= 1
+        return length
 
     def has_child_with_key(self, key):
         return key in self.__children_keys
@@ -146,9 +160,9 @@ class SuffixNode(Node):
         assert child.key not in self.__children_keys, \
             'The specified key, \'{}\' already exists under the specified node {}'.format(child.key, self)
         if self.is_root:
-            child.__real_start = child.__start
+            child.__before_start = 0
         else:
-            child.__real_start = self.__real_start
+            child.__before_start = self.__before_start + self.length
         super(SuffixNode, self).add_child(child)
         self.__children_keys[child.key] = child
         self.__tree.updated()
